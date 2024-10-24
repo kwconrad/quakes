@@ -9,6 +9,7 @@ import { GeoJSONSource, LngLatLike } from "mapbox-gl";
 import {
   clusterCountLayer,
   clusterLayer,
+  faultsLayer,
   unclusteredPointLayer,
 } from "./layers";
 import QuakeIcon from "./quakes-app-brand-icon.svg";
@@ -209,7 +210,7 @@ export default function Home() {
           onClick={onClick}
           mapStyle="mapbox://styles/mapbox/dark-v11"
         >
-          {
+          {dataUrl && (
             <Source
               id="earthquakes"
               type="geojson"
@@ -222,7 +223,16 @@ export default function Home() {
               <Layer {...clusterCountLayer} />
               <Layer {...unclusteredPointLayer} />
             </Source>
-          }
+          )}
+          <Source
+            id="faults"
+            type="geojson"
+            data={
+              "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
+            }
+          >
+            <Layer {...faultsLayer} />
+          </Source>
         </Map>
       </div>
     </div>

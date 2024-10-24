@@ -61,3 +61,13 @@ export const unclusteredPointLayer: LayerProps = {
     "circle-stroke-color": "#fff",
   },
 };
+
+export const faultsLayer: LayerProps = {
+  id: "faults-layer",
+  type: "line",
+  source: "faults",
+  paint: {
+    "line-color": "#f0F000",
+    "line-width": 1,
+  },
+};
