@@ -63,6 +63,9 @@ export default function Home() {
 
   const flyToLocation = (location: LngLatLike) => {
     if (!mapRef.current) return;
+    setDebouncedValue("");
+    setValue("");
+    setQuake(undefined);
 
     mapRef.current.flyTo({ center: location, zoom: 9 });
   };
@@ -114,17 +117,14 @@ export default function Home() {
     return date.toLocaleTimeString("en");
   };
 
-  console.info(quake);
-
   return (
     <div className="w-full h-full relative">
-      <div className="z-20 absolute top-0 left-0 p-6 flex flex-col gap-4">
+      <div className="z-20 absolute top-0 left-0 right-0 p-6 flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <QuakeIcon className="w-12 h-12"></QuakeIcon>
-          <h1 className="text-4xl text-white font-bold">Quakes</h1>
+          <QuakeIcon className="w-5 h-5"></QuakeIcon>
+          <h1 className="text-xl text-white font-bold">Quakes</h1>
         </div>
-
-        <div className="flex flex-col gap-2">
+        <div className="w-full flex flex-col gap-2">
           <input
             type="text"
             value={value}
@@ -132,7 +132,7 @@ export default function Home() {
               changeValue(e);
             }}
             placeholder="Search city or region"
-            className="bg-neutral-800/60 border-neutral-700 backdrop-blur-md border text-white placeholder:text-neutral-200 rounded-md px-4 py-2 w-72 focus:outline-none focus:border-neutral-300"
+            className="bg-neutral-800/60 border-neutral-700 backdrop-blur-md border text-white placeholder:text-neutral-200 rounded-md px-4 py-2 w-full sm:w-72 focus:outline-none focus:border-neutral-300"
           />
           <AnimatePresence initial>
             {data?.features.length > 0 && (
@@ -210,6 +210,15 @@ export default function Home() {
           onClick={onClick}
           mapStyle="mapbox://styles/mapbox/dark-v11"
         >
+          <Source
+            id="faults"
+            type="geojson"
+            data={
+              "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
+            }
+          >
+            <Layer {...faultsLayer} />
+          </Source>
           {dataUrl && (
             <Source
               id="earthquakes"
@@ -224,15 +233,6 @@ export default function Home() {
               <Layer {...unclusteredPointLayer} />
             </Source>
           )}
-          <Source
-            id="faults"
-            type="geojson"
-            data={
-              "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
-            }
-          >
-            <Layer {...faultsLayer} />
-          </Source>
         </Map>
       </div>
     </div>
