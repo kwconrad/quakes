@@ -117,6 +117,30 @@ export default function Home() {
     return date.toLocaleTimeString("en");
   };
 
+  const createMagnitudeLegend = () => {
+    const magnitudeLegendItems: { id: string; color: string; title: string }[] =
+      [];
+    const colors = [
+      "#57abf0",
+      "#6ecdb7",
+      "#f1ca4a",
+      "#e98339",
+      "#e54a30",
+      "#502eec",
+    ];
+    colors.forEach((color, idx) => {
+      magnitudeLegendItems.push({
+        id: `magitude-item-${idx + 1}`,
+        color,
+        title: `${idx} to ${idx + 1}`,
+      });
+    });
+    magnitudeLegendItems[
+      magnitudeLegendItems.length - 1
+    ].title = `5 or greater`;
+    return magnitudeLegendItems;
+  };
+
   return (
     <div className="w-full h-full relative">
       <div className="z-20 absolute top-0 left-0 right-0 p-6 flex flex-col gap-2">
@@ -163,7 +187,23 @@ export default function Home() {
           </AnimatePresence>
         </div>
       </div>
-      <div className="z-20 bottom-0 right-0 absolute p-8">
+      <div className="z-20 bottom-0 left-0 absolute pb-9 px-2">
+        <div className="border py-3 px-4 flex flex-col gap-3 bg-neutral-800/60 border-neutral-700  backdrop-blur-md text-white">
+          <span className="font-medium">Magnitude</span>
+          <div className="flex flex-col gap-2">
+            {createMagnitudeLegend().map((item) => (
+              <div className="flex gap-2" key={item.id}>
+                <div
+                  className="rounded-full w-4 h-4 border border-white"
+                  style={{ backgroundColor: item.color }}
+                ></div>
+                <span className="font-normal text-sm">{item.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="z-20 bottom-0 right-0 absolute p-4">
         <AnimatePresence initial>
           {quake && (
             <motion.div
@@ -174,7 +214,7 @@ export default function Home() {
               className={clsx(
                 "flex flex-col w-60 border p-4 text-white rounded-md",
                 {
-                  "bg-neutral-800/60 border-neutral-700  backdrop-blur-md ":
+                  "bg-neutral-800/60 border-neutral-700  backdrop-blur-md":
                     quake.mag <= 2,
                   "bg-yellow-400/40 border-yellow-900  backdrop-blur-md ":
                     quake.mag > 2 && quake.mag < 4,
